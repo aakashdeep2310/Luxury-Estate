@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Luxury Estates | Premium Property Booking</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css"
+    />
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+
+body {
+        font-family: "Poppins", sans-serif;
+        scroll-behavior: smooth;
+      }
+
+      .hero-text {
+        animation: fadeInUp 1s ease-out;
+      }
+
+      .property-card {
+        transition: all 0.3s ease;
+      }
+
+      .property-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+
+      .fade-in {
+        animation: fadeIn 1s ease-in;
+      }
+
+      .swiper-container-property {
+        width: 100%;
+        height: 400px;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .swiper-slide {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .swiper-slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      
+      .swiper-button-next-property:after,
+      .swiper-button-prev-property:after {
+        font-size: 1.5rem;
+        color: #4f46e5;
+        font-weight: bold;
+      }
+      
+      .swiper-pagination-property .swiper-pagination-bullet {
+        background: white;
+        opacity: 0.8;
+        width: 10px;
+        height: 10px;
+      }
+      
+      .swiper-pagination-property .swiper-pagination-bullet-active {
+        background: #4f46e5;
+        opacity: 1;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .floating {
+        animation: floating 3s ease-in-out infinite;
+      }
+
+      @keyframes floating {
+        0% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-15px);
+        }
+        100% {
+          transform: translateY(0px);
+        }
+      }
+
+      .text-gradient {
+        background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .booking-form {
+        transition: all 0.3s ease;
+      }
+
+      .booking-form:hover {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+
+      .amenity-checkbox:checked + .amenity-label {
+        background-color: #4f46e5;
+        color: white;
+      }
+      .swiper-container {
+        width: 100%;
+        height: 100%;
+        padding-bottom: 50px;
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+      
+      .swiper-slide {
+        height: auto;
+        padding: 10px;
+      }
+      
+     
+      .swiper-button-next,
+      .swiper-button-prev {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      
+      .swiper-container:hover .swiper-button-next,
+      .swiper-container:hover .swiper-button-prev {
+        opacity: 1;
+      }
+      
+  
+      @media (max-width: 640px) {
+        .swiper-button-next,
+        .swiper-button-prev {
+          display: none;
+        }
+        
+        .swiper-container {
+          padding-left: 0;
+          padding-right: 0;
+        }
+      }
+      
+   
+      .swiper-pagination-bullet {
+        width: 10px;
+        height: 10px;
+        margin: 0 5px;
+      }
+      
+      .swiper-pagination-bullet-active {
+        background: #4f46e5;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+   
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 flex items-center">
+              <i class="fas fa-building text-indigo-600 text-2xl mr-2"></i>
+              <span class="text-xl font-bold text-gray-900"
+                >Luxury<span class="text-indigo-600">Estates</span></span
+              >
+            </div>
+            <div class="hidden md:ml-10 md:flex md:space-x-8">
+              <a
+                href="/"
+                class="text-indigo-600 border-indigo-500 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                >Home</a
+              >
+              <a
+                href="#properties"
+                class="text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium"
+                >Properties</a
+              >
+              <a
+                href="#services"
+                class="text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium"
+                >Services</a
+              >
+              <a
+                href="#testimonials"
+                class="text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium"
+                >Testimonials</a
+              >
+              <a
+                href="#contact"
+                class="text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium"
+                >Contact</a
+              >
+            </div>
+          </div>
+          <div class="hidden md:ml-6 md:flex md:items-center">
+            <!-- <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300"> -->
+            <!-- Sign In -->
+            <!-- </button> -->
+          </div>
+          <div class="-mr-2 flex items-center md:hidden">
+            <button
+              type="button"
+              id="mobile-menu-button"
+              class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+            >
+              <span class="sr-only">Open main menu</span>
+              <i class="fas fa-bars"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    
+      <div class="hidden md:hidden" id="mobile-menu">
+        <div class="pt-2 pb-3 space-y-1">
+          <a
+            href="/"
+            class="bg-indigo-50 border-indigo-500 text-indigo-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+            >Home</a
+          >
+          <a
+            href="#properties"
+            class="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+            >Properties</a
+          >
+          <a
+            href="#services"
+            class="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+            >Services</a
+          >
+          <a
+            href="#testimonials"
+            class="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+            >Testimonials</a
+          >
+          <a
+            href="#contact"
+            class="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+            >Contact</a
+          >
+          <div class="mt-4 pl-3 pr-4">
+            <button
+              class="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-base font-medium transition duration-300"
+            >
+              Sign In
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+   
+    <div id="app">
+   
+    </div>
+
+    
+    <footer class="bg-gray-900 text-white pt-12 pb-6">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div>
+            <h3 class="text-lg font-semibold mb-4">LuxuryEstates</h3>
+            <p class="text-gray-400">
+              Premium real estate services for discerning clients worldwide.
+            </p>
+            <div class="mt-4 flex space-x-4">
+              <a href="#" class="text-gray-400 hover:text-white">
+                <i class="fab fa-facebook-f"></i>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white">
+                <i class="fab fa-twitter"></i>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white">
+                <i class="fab fa-instagram"></i>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white">
+                <i class="fab fa-linkedin-in"></i>
+              </a>
+            </div>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+            <ul class="space-y-2">
+              <li>
+                <a href="/" class="text-gray-400 hover:text-white">Home</a>
+              </li>
+              <li>
+                <a href="/properties" class="text-gray-400 hover:text-white"
+                  >Properties</a
+                >
+              </li>
+              <li>
+                <a href="#services" class="text-gray-400 hover:text-white"
+                  >Services</a
+                >
+              </li>
+              <li>
+                <a href="#testimonials" class="text-gray-400 hover:text-white"
+                  >Testimonials</a
+                >
+              </li>
+              <li>
+                <a href="#contact" class="text-gray-400 hover:text-white"
+                  >Contact</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Properties</h3>
+            <ul class="space-y-2">
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white"
+                  >Apartments</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white">Villas</a>
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white"
+                  >Townhouses</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white"
+                  >Penthouses</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white"
+                  >Commercial</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Newsletter</h3>
+            <p class="text-gray-400 mb-4">
+              Subscribe to our newsletter for the latest property updates.
+            </p>
+            <form class="flex">
+              <input
+                type="email"
+                placeholder="Your email"
+                class="px-4 py-2 w-full rounded-l-md focus:outline-none text-gray-900"
+              />
+              <button
+                type="submit"
+                class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-r-md"
+              >
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+        <div
+          class="mt-8 pt-8 border-t border-gray-800 text-center text-gray-400 text-sm"
+        >
+          <p>&copy; 2025 LuxuryEstates. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+
+    <template id="home-template">
+    
+      <section class="relative bg-gray-900 text-white">
+        <div class="absolute inset-0">
+          <img
+            class="w-full h-full object-cover opacity-30"
+            src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+            alt="Modern building"
+          />
+          <div class="absolute inset-0 bg-indigo-900 mix-blend-multiply"></div>
+        </div>
+        <div
+          class="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8"
+        >
+          <div class="hero-text">
+            <h1
+              class="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl"
+            >
+              Find Your <span class="text-gradient">Dream</span> Property
+            </h1>
+            <p class="mt-6 text-xl max-w-3xl">
+              Discover premium properties across the globe. Luxury homes,
+              apartments, and commercial spaces tailored to your needs.
+            </p>
+            <div class="mt-10 flex flex-wrap gap-4">
+              <a
+                href="/properties"
+                class="flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10 transition duration-300 transform hover:scale-105"
+              >
+                Browse Properties
+              </a>
+              <a
+                href="#contact"
+                class="flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 md:py-4 md:text-lg md:px-10 transition duration-300 transform hover:scale-105"
+              >
+                Contact Agent
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    
+      <section class="bg-white pt-12 pb-6 -mt-10 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="bg-white rounded-lg shadow-xl p-6">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">
+              Find Your Perfect Home
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div>
+                <label
+                  for="location"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                  >Location</label
+                >
+                <select
+                  id="location"
+                  class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                >
+                  <option>Any Location</option>
+                  <option>New York</option>
+                  <option>Los Angeles</option>
+                  <option>Chicago</option>
+                  <option>Miami</option>
+                  <option>San Francisco</option>
+                </select>
+              </div>
+              <div>
+                <label
+                  for="property-type"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                  >Property Type</label
+                >
+                <select
+                  id="property-type"
+                  class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                >
+                  <option>Any Type</option>
+                  <option>Apartment</option>
+                  <option>Villa</option>
+                  <option>Townhouse</option>
+                  <option>Penthouse</option>
+                  <option>Commercial</option>
+                </select>
+              </div>
+              <div>
+                <label
+                  for="price-range"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                  >Price Range</label
+                >
+                <select
+                  id="price-range"
+                  class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                >
+                  <option>Any Price</option>
+                  <option>$100,000 - $300,000</option>
+                  <option>$300,000 - $500,000</option>
+                  <option>$500,000 - $1,000,000</option>
+                  <option>$1,000,000+</option>
+                </select>
+              </div>
+              <div class="flex items-end">
+                <button
+                  id="search-btn"
+                  class="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300 transform hover:scale-105"
+                >
+                  Search Properties
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+  
+<section id="properties" class="py-12 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+          <span class="block">Featured Properties</span>
+        </h2>
+        <p class="mt-3 max-w-2xl mx-auto text-xl text-gray-500 sm:mt-4">
+          Explore our curated selection of premium properties
+        </p>
+      </div>
+  
+     
+      <div class="swiper-container overflow-hidden relative">
+        <div class="swiper-wrapper" id="featured-properties-container">
+        
+          <div class="swiper-slide">
+            <div class="bg-white rounded-lg shadow-md overflow-hidden h-full">
+              <div class="h-48 bg-gray-200"></div>
+              <div class="p-5">
+                <h3 class="text-lg font-semibold mb-2">Property Loading...</h3>
+                <p class="text-gray-600">Please wait while we load properties</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+     
+        <div class="swiper-pagination mt-6"></div>
+        
+    
+        <div class="swiper-button-next !text-indigo-600 !right-0 md:!right-4 !w-10 !h-10 !rounded-full !bg-white/80 !shadow-md after:!text-xl"></div>
+        <div class="swiper-button-prev !text-indigo-600 !left-0 md:!left-4 !w-10 !h-10 !rounded-full !bg-white/80 !shadow-md after:!text-xl"></div>
+      </div>
+  
+      <div class="mt-12 text-center">
+        <a
+          href="/properties"
+          class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-md shadow-sm transition duration-300 inline-block"
+        >
+          View All Properties
+        </a>
+      </div>
+    </div>
+  </section>
+
+   
+      <section id="services" class="py-12 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="text-center mb-12">
+            <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+              <span class="block">Our Services</span>
+            </h2>
+            <p class="mt-3 max-w-2xl mx-auto text-xl text-gray-500 sm:mt-4">
+              Comprehensive real estate solutions for all your needs
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div
+              class="bg-gray-50 p-6 rounded-lg shadow-sm hover:shadow-md transition duration-300"
+            >
+              <div
+                class="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white mb-4"
+              >
+                <i class="fas fa-home text-xl"></i>
+              </div>
+              <h3 class="text-lg font-medium text-gray-900 mb-2">
+                Property Sales
+              </h3>
+              <p class="text-gray-500">
+                Expert guidance through the entire home buying process, from
+                search to closing.
+              </p>
+            </div>
+
+            <div
+              class="bg-gray-50 p-6 rounded-lg shadow-sm hover:shadow-md transition duration-300"
+            >
+              <div
+                class="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white mb-4"
+              >
+                <i class="fas fa-key text-xl"></i>
+              </div>
+              <h3 class="text-lg font-medium text-gray-900 mb-2">
+                Rental Management
+              </h3>
+              <p class="text-gray-500">
+                Full-service rental solutions including tenant screening and
+                property maintenance.
+              </p>
+            </div>
+
+            <div
+              class="bg-gray-50 p-6 rounded-lg shadow-sm hover:shadow-md transition duration-300"
+            >
+              <div
+                class="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white mb-4"
+              >
+                <i class="fas fa-chart-line text-xl"></i>
+              </div>
+              <h3 class="text-lg font-medium text-gray-900 mb-2">
+                Investment Consulting
+              </h3>
+              <p class="text-gray-500">
+                Strategic advice to maximize your real estate investment
+                returns.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+   
+      <section id="testimonials" class="py-12 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="text-center mb-12">
+            <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+              <span class="block">Client Testimonials</span>
+            </h2>
+            <p class="mt-3 max-w-2xl mx-auto text-xl text-gray-500 sm:mt-4">
+              What our clients say about us
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+              <div class="flex items-center mb-4">
+                <div class="flex-shrink-0">
+                  <img
+                    class="h-10 w-10 rounded-full"
+                    src="https://randomuser.me/api/portraits/women/32.jpg"
+                    alt="Sarah Johnson"
+                  />
+                </div>
+                <div class="ml-4">
+                  <h4 class="text-sm font-bold text-gray-900">Sarah Johnson</h4>
+                  <div class="flex text-yellow-400">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                  </div>
+                </div>
+              </div>
+              <p class="text-gray-600 italic">
+                "The team at LuxuryEstates made my home buying experience
+                seamless. Their attention to detail and market knowledge is
+                unmatched."
+              </p>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+              <div class="flex items-center mb-4">
+                <div class="flex-shrink-0">
+                  <img
+                    class="h-10 w-10 rounded-full"
+                    src="https://randomuser.me/api/portraits/men/45.jpg"
+                    alt="Michael Chen"
+                  />
+                </div>
+                <div class="ml-4">
+                  <h4 class="text-sm font-bold text-gray-900">Michael Chen</h4>
+                  <div class="flex text-yellow-400">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                  </div>
+                </div>
+              </div>
+              <p class="text-gray-600 italic">
+                "As an investor, I rely on their expertise to identify
+                properties with the best potential. They've never disappointed."
+              </p>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+              <div class="flex items-center mb-4">
+                <div class="flex-shrink-0">
+                  <img
+                    class="h-10 w-10 rounded-full"
+                    src="https://randomuser.me/api/portraits/women/68.jpg"
+                    alt="Emily Rodriguez"
+                  />
+                </div>
+                <div class="ml-4">
+                  <h4 class="text-sm font-bold text-gray-900">
+                    Emily Rodriguez
+                  </h4>
+                  <div class="flex text-yellow-400">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                  </div>
+                </div>
+              </div>
+              <p class="text-gray-600 italic">
+                "Found my dream apartment in just two weeks! The agent
+                understood exactly what I was looking for."
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+     
+      <section class="bg-indigo-700 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 class="text-3xl font-extrabold sm:text-4xl">
+            <span class="block">Ready to find your dream property?</span>
+          </h2>
+          <p class="mt-3 max-w-2xl mx-auto text-xl text-indigo-100 sm:mt-4">
+            Our agents are standing by to help you with all your real estate
+            needs.
+          </p>
+          <div class="mt-8 flex justify-center">
+            <a
+              href="#contact"
+              class="flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-white hover:bg-gray-100 md:py-4 md:text-lg md:px-10 transition duration-300 transform hover:scale-105"
+            >
+              Contact Us Today
+            </a>
+          </div>
+        </div>
+      </section>
+
+     
+      <section id="contact" class="py-12 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="lg:grid lg:grid-cols-2 lg:gap-8">
+            <div class="mb-8 lg:mb-0">
+              <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                <span class="block">Get In Touch</span>
+              </h2>
+              <p class="mt-3 text-lg text-gray-500">
+                Have questions about a property or our services? Fill out the
+                form and one of our agents will contact you shortly.
+              </p>
+              <div class="mt-8">
+                <div class="flex items-start mb-6">
+                  <div class="flex-shrink-0">
+                    <i
+                      class="fas fa-map-marker-alt text-indigo-600 text-xl"
+                    ></i>
+                  </div>
+                  <div class="ml-4">
+                    <h3 class="text-lg font-medium text-gray-900">
+                      Our Office
+                    </h3>
+                    <p class="mt-1 text-gray-500">New Delhi</p>
+                  </div>
+                </div>
+                <div class="flex items-start mb-6">
+                  <div class="flex-shrink-0">
+                    <i class="fas fa-phone-alt text-indigo-600 text-xl"></i>
+                  </div>
+                  <div class="ml-4">
+                    <h3 class="text-lg font-medium text-gray-900">Phone</h3>
+                    <p class="mt-1 text-gray-500">+91 8763876592</p>
+                  </div>
+                </div>
+                <div class="flex items-start">
+                  <div class="flex-shrink-0">
+                    <i class="fas fa-envelope text-indigo-600 text-xl"></i>
+                  </div>
+                  <div class="ml-4">
+                    <h3 class="text-lg font-medium text-gray-900">Email</h3>
+                    <p class="mt-1 text-gray-500">info@luxuryestates.com</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-gray-50 p-6 rounded-lg shadow-sm">
+              <form id="contact-form" class="space-y-6">
+                <div>
+                  <label
+                    for="name"
+                    class="block text-sm font-medium text-gray-700"
+                    >Full Name</label
+                  >
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    required
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                </div>
+                <div>
+                  <label
+                    for="email"
+                    class="block text-sm font-medium text-gray-700"
+                    >Email Address</label
+                  >
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                </div>
+                <div>
+                  <label
+                    for="phone"
+                    class="block text-sm font-medium text-gray-700"
+                    >Phone Number</label
+                  >
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                </div>
+                <div>
+                  <label
+                    for="message"
+                    class="block text-sm font-medium text-gray-700"
+                    >Your Message</label
+                  >
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows="4"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  ></textarea>
+                </div>
+                <div>
+                  <button
+                    type="submit"
+                    class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300"
+                  >
+                    Send Message
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+    </template>
+
+    <template id="properties-template">
+      <section class="py-12 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="text-center mb-12">
+            <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+              <span class="block">All Properties</span>
+            </h2>
+            <p class="mt-3 max-w-2xl mx-auto text-xl text-gray-500 sm:mt-4">
+              Browse our complete collection of premium properties
+            </p>
+          </div>
+
+          <div class="mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div>
+                <label
+                  for="properties-location"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                  >Location</label
+                >
+                <select
+                  id="properties-location"
+                  class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                >
+                  <option value="">All Locations</option>
+                  <option>New York</option>
+                  <option>Los Angeles</option>
+                  <option>Chicago</option>
+                  <option>Miami</option>
+                  <option>San Francisco</option>
+                </select>
+              </div>
+              <div>
+                <label
+                  for="properties-type"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                  >Property Type</label
+                >
+                <select
+                  id="properties-type"
+                  class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                >
+                  <option value="">All Types</option>
+                  <option>Apartment</option>
+                  <option>Villa</option>
+                  <option>Townhouse</option>
+                  <option>Penthouse</option>
+                  <option>Commercial</option>
+                </select>
+              </div>
+              <div>
+                <label
+                  for="properties-price"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                  >Price Range</label
+                >
+                <select
+                  id="properties-price"
+                  class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                >
+                  <option value="">All Prices</option>
+                  <option>$100,000 - $300,000</option>
+                  <option>$300,000 - $500,000</option>
+                  <option>$500,000 - $1,000,000</option>
+                  <option>$1,000,000+</option>
+                </select>
+              </div>
+              <div class="flex items-end">
+                <button
+                  id="properties-search-btn"
+                  class="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300"
+                >
+                  Filter Properties
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            id="all-properties-container"
+          >
+            
+          </div>
+
+          <div class="mt-12 text-center">
+            <button
+              id="load-more"
+              class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-6 border border-gray-300 rounded shadow-sm transition duration-300"
+            >
+              Load More Properties
+            </button>
+          </div>
+        </div>
+      </section>
+    </template>
+
+    
+    <template id="property-details-template">
+        <section class="py-12 bg-gray-50">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+              <div class="md:flex flex-col lg:flex-row">
+            
+                <div class="lg:w-1/2 relative">
+                  <div class="swiper-container-property h-full w-full">
+                    <div class="swiper-wrapper">
+                      
+                    </div>
+                  
+                    <div class="swiper-pagination-property absolute bottom-4 left-0 right-0 z-10"></div>
+                   
+                    <div class="swiper-button-next-property absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 rounded-full p-3 shadow-md hover:bg-white"></div>
+                    <div class="swiper-button-prev-property absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 rounded-full p-3 shadow-md hover:bg-white"></div>
+                  </div>
+                </div>
+                
+              
+                <div class="lg:w-1/2 p-6 md:p-8">
+                  <h1 class="text-3xl font-bold text-gray-900 mb-2" id="property-title"></h1>
+                  <p class="text-indigo-600 text-2xl font-bold mb-4" id="property-price"></p>
+                  <p class="text-gray-600 mb-4">
+                    <i class="fas fa-map-marker-alt text-indigo-600 mr-2"></i>
+                    <span id="property-location"></span>
+                  </p>
+      
+              
+                  <div class="grid grid-cols-4 gap-4 mb-6">
+                    <div class="text-center border-r border-gray-200 last:border-r-0">
+                      <div class="text-gray-500 text-sm">Bedrooms</div>
+                      <div class="text-gray-900 font-bold text-xl" id="property-bedrooms"></div>
+                    </div>
+                    <div class="text-center border-r border-gray-200 last:border-r-0">
+                      <div class="text-gray-500 text-sm">Bathrooms</div>
+                      <div class="text-gray-900 font-bold text-xl" id="property-bathrooms"></div>
+                    </div>
+                    <div class="text-center border-r border-gray-200 last:border-r-0">
+                      <div class="text-gray-500 text-sm">Area</div>
+                      <div class="text-gray-900 font-bold text-xl" id="property-area"></div>
+                    </div>
+                    <div class="text-center">
+                      <div class="text-gray-500 text-sm">Type</div>
+                      <div class="text-gray-900 font-bold text-xl" id="property-type"></div>
+                    </div>
+                  </div>
+      
+                  <div class="mb-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">Description</h3>
+                    <p class="text-gray-600" id="property-description"></p>
+                  </div>
+      
+        
+                  <div class="mb-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">Amenities</h3>
+                    <div class="flex flex-wrap gap-2" id="property-amenities">
+                   
+                    </div>
+                  </div>
+      
+                 
+                  <div class="mt-8">
+                    <button
+                      id="book-now-btn"
+                      class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-md font-bold transition duration-300 shadow-md hover:shadow-lg"
+                    >
+                      Book Viewing
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </template>
+
+    
+      <div
+        id="booking-modal"
+        class="fixed z-50 inset-0 overflow-y-auto hidden"
+        aria-labelledby="modal-title"
+        role="dialog"
+        aria-modal="true"
+      >
+        <div
+          class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+        >
+          <div
+            class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+            aria-hidden="true"
+          ></div>
+          <span
+            class="hidden sm:inline-block sm:align-middle sm:h-screen"
+            aria-hidden="true"
+            >&#8203;</span
+          >
+          <div
+            class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+          >
+            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+              <div class="sm:flex sm:items-start">
+                <div
+                  class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full"
+                >
+                  <div class="flex justify-between items-start">
+                    <h3
+                      class="text-2xl leading-6 font-bold text-gray-900"
+                      id="modal-title"
+                    >
+                      Book Viewing
+                    </h3>
+                    <button
+                      id="close-booking-modal"
+                      type="button"
+                      class="text-gray-400 hover:text-gray-500 focus:outline-none"
+                    >
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </div>
+
+                  <div class="mt-4">
+                    <form id="booking-form" class="space-y-4">
+                      <input type="hidden" id="property-id" />
+                      <div>
+                        <label
+                          for="booking-name"
+                          class="block text-sm font-medium text-gray-700"
+                          >Full Name</label
+                        >
+                        <input
+                          type="text"
+                          id="booking-name"
+                          required
+                          class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                        />
+                      </div>
+                      <div>
+                        <label
+                          for="booking-email"
+                          class="block text-sm font-medium text-gray-700"
+                          >Email</label
+                        >
+                        <input
+                          type="email"
+                          id="booking-email"
+                          required
+                          class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                        />
+                      </div>
+                      <div>
+                        <label
+                          for="booking-phone"
+                          class="block text-sm font-medium text-gray-700"
+                          >Phone</label
+                        >
+                        <input
+                          type="tel"
+                          id="booking-phone"
+                          required
+                          class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                        />
+                      </div>
+                      <div>
+                        <label
+                          for="booking-date"
+                          class="block text-sm font-medium text-gray-700"
+                          >Preferred Date</label
+                        >
+                        <input
+                          type="date"
+                          id="booking-date"
+                          required
+                          class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                        />
+                      </div>
+                      <div>
+                        <label
+                          for="booking-time"
+                          class="block text-sm font-medium text-gray-700"
+                          >Preferred Time</label
+                        >
+                        <input
+                          type="time"
+                          id="booking-time"
+                          required
+                          class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                        />
+                      </div>
+                      <div>
+                        <label
+                          for="booking-notes"
+                          class="block text-sm font-medium text-gray-700"
+                          >Additional Notes</label
+                        >
+                        <textarea
+                          id="booking-notes"
+                          rows="3"
+                          class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                        ></textarea>
+                      </div>
+                      <div class="mt-6">
+                        <button
+                          type="submit"
+                          class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300"
+                        >
+                          Confirm Booking
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+     
+      <div
+        id="payment-modal"
+        class="fixed z-50 inset-0 overflow-y-auto hidden"
+        aria-labelledby="modal-title"
+        role="dialog"
+        aria-modal="true"
+      >
+        <div
+          class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+        >
+          <div
+            class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+            aria-hidden="true"
+          ></div>
+          <span
+            class="hidden sm:inline-block sm:align-middle sm:h-screen"
+            aria-hidden="true"
+            >&#8203;</span
+          >
+          <div
+            class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+          >
+            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+              <div class="sm:flex sm:items-start">
+                <div
+                  class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full"
+                >
+                  <div class="flex justify-between items-start">
+                    <h3
+                      class="text-2xl leading-6 font-bold text-gray-900"
+                      id="payment-modal-title"
+                    >
+                      Secure Payment
+                    </h3>
+                    <button
+                      id="close-payment-modal"
+                      type="button"
+                      class="text-gray-400 hover:text-gray-500 focus:outline-none"
+                    >
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </div>
+
+                  <div class="mt-4">
+                    <div id="payment-summary" class="mb-4">
+                      <h4 class="text-lg font-medium text-gray-900 mb-2">
+                        Booking Summary
+                      </h4>
+                      <div class="flex justify-between mb-1">
+                        <span class="text-gray-600">Property:</span>
+                        <span class="font-medium" id="payment-property"></span>
+                      </div>
+                      <div class="flex justify-between mb-1">
+                        <span class="text-gray-600">Date:</span>
+                        <span class="font-medium" id="payment-date"></span>
+                      </div>
+                      <div class="flex justify-between mb-1">
+                        <span class="text-gray-600">Time:</span>
+                        <span class="font-medium" id="payment-time"></span>
+                      </div>
+                      <div
+                        class="flex justify-between mt-3 pt-3 border-t border-gray-200"
+                      >
+                        <span class="text-gray-600">Booking Fee:</span>
+                        <span class="font-bold text-indigo-600">$500</span>
+                      </div>
+                    </div>
+
+                    <div id="payment-form" class="mt-4">
+                      <div class="mb-4">
+                        <label
+                          for="card-element"
+                          class="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                          Credit or debit card
+                        </label>
+                        <div
+                          id="card-element"
+                          class="p-2 border border-gray-300 rounded-md"
+                        >
+                       
+                        </div>
+                        <div
+                          id="card-errors"
+                          role="alert"
+                          class="text-red-500 text-sm mt-1"
+                        ></div>
+                      </div>
+
+                      <button
+                        id="submit-payment"
+                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300"
+                      >
+                        Pay $500
+                      </button>
+                    </div>
+
+                    <div id="payment-success" class="hidden text-center py-8">
+                      <div
+                        class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100"
+                      >
+                        <i class="fas fa-check text-green-600"></i>
+                      </div>
+                      <h3 class="text-lg font-medium text-gray-900 mt-3">
+                        Payment Successful!
+                      </h3>
+                      <p class="text-gray-500 mt-2">
+                        Your viewing has been booked. A confirmation has been
+                        sent to your email.
+                      </p>
+                      <div class="mt-6">
+                        <button
+                          id="close-after-payment"
+                          class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300"
+                        >
+                          Close
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HES5CXJCPW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-HES5CXJCPW');
+</script>
+
+    <script src="app.js"></script>
+  </body>
+</html>
